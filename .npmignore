@@ -1,0 +1,50 @@
+# Ignore TypeScript source files
+src/
+
+# Ignore Cypress project structure not needed in NPM
+cypress/
+cypress.config.ts
+cypress.config.js
+
+# Ignore build outputs if not from dist/
+*.log
+node_modules/
+dist/test/
+coverage/
+tmp/
+temp/
+
+# Ignore test data and examples
+examples/
+demo/
+test/
+__tests__/
+specs/
+*.spec.ts
+*.cy.ts
+*.test.ts
+
+# Ignore dev tools
+.vscode/
+.idea/
+.env*
+tsconfig.json
+tsconfig.build.json
+jest.config.js
+*.swp
+*.swo
+
+# Ignore metadata
+.nyc_output/
+.eslint*
+.prettier*
+.editorconfig
+
+# Ignore version control
+.git/
+.gitignore
+
+# Ignore OS/system files
+.DS_Store
+Thumbs.db
+desktop.ini
