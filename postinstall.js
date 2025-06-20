@@ -3,36 +3,35 @@ const path = require("path");
 
 const projectRoot = process.cwd();
 const userPackageJsonPath = path.join(projectRoot, "package.json");
-const INSTALL_SCRIPT_NAME = "install:commands";
-const INSTALL_SCRIPT_COMMAND = "node ./node_modules/cypress-angular-commands/scripts/install-commands.js";
+const expectedScriptName = "install:commands";
+const expectedScriptValue =
+  "node ./node_modules/cypress-angular-commands/scripts/install-commands.js";
 
-function ensureInstallScriptInUserPackage() {
+function adviseIfMissingScript() {
   if (!fs.existsSync(userPackageJsonPath)) {
-    console.warn("⚠️ package.json not found in user project.");
+    console.warn("⚠️ No package.json found in project root.");
     return;
   }
-
-  const content = fs.readFileSync(userPackageJsonPath, "utf8");
-  let packageJson;
 
   try {
-    packageJson = JSON.parse(content);
-  } catch (e) {
-    console.error("❌ Failed to parse user's package.json:", e.message);
-    return;
-  }
+    const pkg = JSON.parse(fs.readFileSync(userPackageJsonPath, "utf-8"));
+    const scripts = pkg.scripts || {};
 
-  packageJson.scripts = packageJson.scripts || {};
-
-  if (!packageJson.scripts[INSTALL_SCRIPT_NAME]) {
-    packageJson.scripts[INSTALL_SCRIPT_NAME] = INSTALL_SCRIPT_COMMAND;
-    fs.writeFileSync(userPackageJsonPath, JSON.stringify(packageJson, null, 2));
-    console.log(`✅ Added "${INSTALL_SCRIPT_NAME}" to user package.json`);
-  } else {
-    console.log(`ℹ️ "${INSTALL_SCRIPT_NAME}" already exists in user package.json`);
+    if (!scripts[expectedScriptName]) {
+      console.warn(
+        `⚠️ "${expectedScriptName}" not found in package.json scripts.`
+      );
+      console.info(
+        `💡 To enable command installation manually, add this script to your package.json:\n\n  "${expectedScriptName}": "${expectedScriptValue}"\n`
+      );
+    } else {
+      console.log(`✅ "${expectedScriptName}" already present.`);
+    }
+  } catch (err) {
+    console.error("❌ Failed to read user's package.json:", err.message);
   }
 }
 
-// 🏁 Start
-console.log("📦 Cypress Angular Commands: postinstall hook");
-ensureInstallScriptInUserPackage();
+// Run it
+console.log("📦 Cypress Angular Commands: postinstall check...");
+adviseIfMissingScript();

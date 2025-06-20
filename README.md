@@ -21,9 +21,20 @@ Angular applications come with unique UI components, async challenges, and dynam
 
 ```bash
 npm install cypress-angular-commands
-````
+```
 
 > ✨ This package automatically adds all commands under `cypress/support/commands/` and configures the `index.ts` to register them.
+
+---
+
+## 🛠 Add Installation Script (1-time)
+
+In your `package.json`, add:
+
+```json
+"scripts": {
+  "install:commands": "node ./node_modules/cypress-angular-commands/scripts/install-commands.js"
+}
 
 ---
 
@@ -32,14 +43,16 @@ npm install cypress-angular-commands
 After installation, the following will be added to your project:
 
 ```
+
 cypress/
 └── support/
-    ├── commands/
-    │   ├── 1.Search_Filter_Verifications.ts
-    │   ├── 2.Element_Visibility_StateChecks.ts
-    │   ├── ...
-    └── index.ts
-```
+├── commands/
+│ ├── 1.Search_Filter_Verifications.ts
+│ ├── 2.Element_Visibility_StateChecks.ts
+│ ├── ...
+└── index.ts
+
+````
 
 No manual import needed. You’re ready to write Cypress tests instantly.
 
@@ -82,29 +95,31 @@ cy.getCellValueWhenCondition(2, 0, 'Confirmed').then((val) => {
 // validate form label and placeholder
 cy.verifyLabelText('[data-test="email-label"]', 'Email Address');
 cy.verifyPlaceholder('[data-test="email-input"]', 'Enter your email');
-```
+````
 
 ---
 
 ## 📚 Use Cases
 
-* Testing Angular-based ERP systems with complex UIs
-* Form, list, and table-driven modules (e.g., Sales, Finance, HR)
-* Streamlining repetitive frontend test cases in enterprise apps
-* Improving coverage without bloated test scripts
+- Testing Angular-based ERP systems with complex UIs
+- Form, list, and table-driven modules (e.g., Sales, Finance, HR)
+- Streamlining repetitive frontend test cases in enterprise apps
+- Improving coverage without bloated test scripts
 
 ---
 
 ## 💡 Best Practices
 
-* Use these commands in combination with Cypress custom fixtures and aliases
-* All commands are asynchronous-safe and include timeouts/stability checks
-* They work seamlessly with PrimeNG, Material UI, and other Angular UI libraries
+- Use these commands in combination with Cypress custom fixtures and aliases
+- All commands are asynchronous-safe and include timeouts/stability checks
+- They work seamlessly with PrimeNG, Material UI, and other Angular UI libraries
 
 ---
 
 ## 🛡️ Already using Cypress with your own commands?
+
 This package will automatically:
+
 - Add commands under `cypress/support/angular-commands/`
 - Append a safe import to your existing `cypress/support/index.ts`
 - **Does NOT overwrite your files or affect your specs**
@@ -113,11 +128,11 @@ This package will automatically:
 
 ## 📈 SEO Keywords (for Google indexing)
 
-* Cypress custom commands for Angular
-* Cypress ERP UI test helpers
-* Cypress PrimeNG table and dropdown testing
-* Reusable Cypress functions for enterprise apps
-* Cypress test automation Angular UI
+- Cypress custom commands for Angular
+- Cypress ERP UI test helpers
+- Cypress PrimeNG table and dropdown testing
+- Reusable Cypress functions for enterprise apps
+- Cypress test automation Angular UI
 
 ---
 
@@ -146,5 +161,7 @@ Automation Architect | QA Mentor | Cypress Expert
 **Make your Angular test automation clean, scalable, and powerful – with Cypress Angular Commands.**
 
 > ⭐ Star this package and share it with your QA network!
+
+```
 
 ```
