@@ -3,11 +3,8 @@ const path = require("path");
 
 const projectRoot = process.cwd();
 const targetSupportDir = path.join(projectRoot, "cypress", "support");
-const targetAngularCommandsDir = path.join(
-  targetSupportDir,
-  "angular-commands"
-);
-const sourceDistDir = path.join(__dirname, "dist", "support");
+const targetAngularCommandsDir = path.join(targetSupportDir, "angular-commands");
+const sourceDistDir = path.join(__dirname, "dist", "commands"); // ✅ Corrected path
 
 function copyRecursiveSync(src, dest) {
   if (!fs.existsSync(src)) {
@@ -31,7 +28,7 @@ function copyRecursiveSync(src, dest) {
 function appendImportToIndex() {
   const indexPathTS = path.join(targetSupportDir, "index.ts");
   const indexPathJS = path.join(targetSupportDir, "index.js");
-  const importLine = `import './angular-commands/index';`;
+  const importLine = `import './angular-commands';`;
 
   const indexFile = fs.existsSync(indexPathTS)
     ? indexPathTS
@@ -57,9 +54,7 @@ console.log("📦 Installing Cypress Angular Commands...");
 try {
   copyRecursiveSync(sourceDistDir, targetAngularCommandsDir);
   appendImportToIndex();
-  console.log(
-    "✅ Custom commands installed into cypress/support/angular-commands/"
-  );
+  console.log("✅ Custom commands installed into cypress/support/angular-commands/");
 } catch (err) {
   console.error("❌ Failed to install commands:", err.message);
 }
