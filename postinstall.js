@@ -7,63 +7,58 @@ const targetAngularCommandsDir = path.join(
   targetSupportDir,
   "angular-commands"
 );
-const sourceCommandsDir = path.join(__dirname, "src", "support", "commands");
-const sourceIndexPath = path.join(__dirname, "src", "support", "index.ts");
-const targetIndexPath = path.join(targetAngularCommandsDir, "index.ts");
+const sourceDistDir = path.join(__dirname, "dist", "support");
 
 function copyRecursiveSync(src, dest) {
-  const exists = fs.existsSync(src);
-  const stats = exists && fs.statSync(src);
-  const isDirectory = exists && stats.isDirectory();
-  if (isDirectory) {
-    fs.mkdirSync(dest, { recursive: true });
-    fs.readdirSync(src).forEach((childItemName) => {
-      copyRecursiveSync(
-        path.join(src, childItemName),
-        path.join(dest, childItemName)
-      );
-    });
-  } else {
-    fs.copyFileSync(src, dest);
+  if (!fs.existsSync(src)) {
+    console.warn(`⚠️ Source folder ${src} not found.`);
+    return;
   }
+
+  fs.mkdirSync(dest, { recursive: true });
+  fs.readdirSync(src).forEach((file) => {
+    const srcPath = path.join(src, file);
+    const destPath = path.join(dest, file);
+
+    if (fs.lstatSync(srcPath).isDirectory()) {
+      copyRecursiveSync(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  });
 }
 
-function appendImportToUserSupportIndex() {
-  const userIndexPath = path.join(targetSupportDir, "index.ts");
-  const importStatement = `import './angular-commands/index';`;
+function appendImportToIndex() {
+  const indexPathTS = path.join(targetSupportDir, "index.ts");
+  const indexPathJS = path.join(targetSupportDir, "index.js");
+  const importLine = `import './angular-commands/index';`;
 
-  if (fs.existsSync(userIndexPath)) {
-    const content = fs.readFileSync(userIndexPath, "utf-8");
+  const indexFile = fs.existsSync(indexPathTS)
+    ? indexPathTS
+    : fs.existsSync(indexPathJS)
+    ? indexPathJS
+    : null;
 
-    if (!content.includes(importStatement)) {
-      fs.appendFileSync(userIndexPath, `\n${importStatement}`);
-      console.log("✅ Appended import to existing cypress/support/index.ts");
+  if (indexFile) {
+    const content = fs.readFileSync(indexFile, "utf-8");
+    if (!content.includes(importLine)) {
+      fs.appendFileSync(indexFile, `\n${importLine}`);
+      console.log(`✅ Appended import to ${path.basename(indexFile)}`);
     } else {
-      console.log("ℹ️ Import already exists in index.ts, skipping.");
+      console.log("ℹ️ Import already present. Skipping.");
     }
   } else {
-    console.warn(
-      "⚠️ Could not find cypress/support/index.ts. Please manually import:\n" +
-        importStatement
-    );
+    console.warn("⚠️ Could not find cypress/support/index.ts or index.js.");
   }
 }
 
 console.log("📦 Installing Cypress Angular Commands...");
 
 try {
-  // Copy files
-  copyRecursiveSync(
-    sourceCommandsDir,
-    path.join(targetAngularCommandsDir, "commands")
-  );
-  fs.copyFileSync(sourceIndexPath, targetIndexPath);
-
-  // Append import to user's index.ts
-  appendImportToUserSupportIndex();
-
+  copyRecursiveSync(sourceDistDir, targetAngularCommandsDir);
+  appendImportToIndex();
   console.log(
-    "✅ Commands successfully installed into cypress/support/angular-commands/"
+    "✅ Custom commands installed into cypress/support/angular-commands/"
   );
 } catch (err) {
   console.error("❌ Failed to install commands:", err.message);

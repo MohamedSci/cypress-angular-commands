@@ -1,6 +1,6 @@
 {
   "name": "cypress-angular-commands",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Reusable Cypress custom commands for Angular-based web applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
