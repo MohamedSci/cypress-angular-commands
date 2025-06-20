@@ -11,15 +11,24 @@
   },
   "keywords": [
     "cypress",
+    "custom-commands",
     "e2e",
     "testing",
     "angular",
-    "custom-commands"
+    "test-automation",
+    "automation testing",
+    "automated testing",
+    "e2e-testing",
+    "cypress-testing",
+    "report-generation",
+    "mochawesome",
+    "qa",
+    "testing-tools"
   ],
   "author": "Mohamed Said Ibrahim",
   "license": "Apache-2.0",
-  "dependencies": {},
   "devDependencies": {
+    "cypress": "^14.5.0",
     "typescript": "^5.8.3"
   }
 }
