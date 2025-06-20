@@ -5,7 +5,7 @@ const projectRoot = process.cwd();
 const userPackageJsonPath = path.join(projectRoot, "package.json");
 const expectedScriptName = "install:commands";
 const expectedScriptValue =
-  "node ./node_modules/cypress-angular-commands/scripts/install-commands.js";
+  "node ./node_modules/cypress-enterprise-commands/scripts/install-commands.js";
 
 function adviseIfMissingScript() {
   if (!fs.existsSync(userPackageJsonPath)) {

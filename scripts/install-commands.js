@@ -6,7 +6,7 @@ const DEST_DIR = path.join(
   process.cwd(),
   "cypress",
   "support",
-  "angular-commands"
+  "enterprise-commands"
 );
 const SUPPORT_INDEX_TS = path.join(
   process.cwd(),
@@ -20,7 +20,7 @@ const SUPPORT_INDEX_JS = path.join(
   "support",
   "index.js"
 );
-const IMPORT_LINE = `import './angular-commands';`;
+const IMPORT_LINE = `import './enterprise-commands';`;
 
 function copyRecursiveSync(src, dest) {
   if (!fs.existsSync(src)) {
@@ -67,7 +67,7 @@ function main() {
     console.warn("⚠️ Could not find cypress/support/index.ts or index.js");
   }
 
-  console.log("✅ Commands copied to: cypress/support/angular-commands/");
+  console.log("✅ Commands copied to: cypress/support/enterprise-commands/");
 }
 
 main();

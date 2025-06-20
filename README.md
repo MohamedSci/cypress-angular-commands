@@ -1,214 +1,171 @@
-# 🌟 Cypress Angular Commands – Reusable Custom Commands for Angular Apps
+# 🚀 Cypress Enterprise Commands
 
-![npm](https://img.shields.io/npm/v/cypress-angular-commands)
-![Cypress](https://img.shields.io/badge/Cypress-Tested-brightgreen)
+![npm](https://img.shields.io/npm/v/cypress-enterprise-commands)  
+![Cypress](https://img.shields.io/badge/Cypress-Tested-brightgreen)  
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
 
-> ✅ A robust, production-ready collection of **professional Cypress custom commands** designed for Angular-based enterprise applications and ERP systems.
+> ✅ **A complete, production-ready library of reusable Cypress custom commands for enterprise web applications** — ideal for Angular, PrimeNG, React, Laravel, and complex UI frameworks.
 
 ---
 
-## 🚀 Why Use This Package?
+## 🎯 Purpose
 
-Testing Angular applications can be challenging due to dynamic components, async rendering, PrimeNG quirks, and heavy forms.
+**`cypress-enterprise-commands`** is a comprehensive utility toolkit that helps Cypress testers write clear, stable, and efficient tests for modern frontend-heavy applications — particularly **enterprise and ERP systems**.
 
-This package provides **ready-made Cypress custom commands** that:
+It provides 80+ powerful custom commands for:
 
-- Handle complex interactions with **tables, forms, dialogs, dropdowns, validations, and more**
-- Follow **professional naming conventions**, mirroring real test case intent
-- Provide **stable, readable, and reusable** test logic out-of-the-box
-- Require **zero configuration** – just plug and play
-
-> 🎯 Ideal for ERP systems and enterprise apps with rich Angular front-ends (PrimeNG, Angular Material, etc.)
+- Tables, filters, labels, dialogs, dropdowns, inputs, and more.
+- Handling edge cases, async rendering, UI validation, and interaction.
+- Reducing boilerplate and making tests scalable and DRY.
 
 ---
 
 ## 📦 Installation
 
 ```bash
-npm install cypress-angular-commands
-````
+npm install cypress-enterprise-commands
+```
+
+Then run the install command to copy reusable commands to your Cypress project:
+
+```bash
+npm run install:commands
+```
+
+> ✅ This will copy commands into `cypress/support/enterprise-commands/` and automatically import them into your `cypress/support/index.ts`.
 
 ---
 
-## 🛠 Add Install Script (One-Time Setup)
+## 📂 Directory Structure (After Installation)
 
-To prepare the commands in your existing Cypress project, add this to your `package.json`:
+```bash
+cypress/
+├── support/
+│   ├── enterprise-commands/
+│   │   ├── 1.Search_Filter_Verifications.ts
+│   │   ├── 2.Element_Visibility_StateChecks.ts
+│   │   ├── ...
+│   └── index.ts  <-- Automatically updated to import all commands
+```
+
+---
+
+## ⚙️ Setup in `package.json` (Optional)
+
+If not already added, you can include this script for future reinstalls:
 
 ```json
 "scripts": {
-  "install:commands": "node ./node_modules/cypress-angular-commands/scripts/install-commands.js"
+  "install:commands": "node ./node_modules/cypress-enterprise-commands/scripts/install-commands.js"
 }
 ```
 
-Then run:
+---
 
-```bash
-npm run install:commands
-```
+## ✅ What’s Included?
 
-This will copy the custom command files to:
+> 🧩 80+ fully typed custom commands, organized in 14 modules:
 
-```
-cypress/support/angular-commands/
-```
-
-and safely import them in `cypress/support/index.ts` (without affecting your existing commands).
+| 📁 File                                          | 🔎 Purpose                                         |
+| ------------------------------------------------ | -------------------------------------------------- |
+| `1.Search_Filter_Verifications.ts`               | Table search field testing & filtering validations |
+| `2.Element_Visibility_StateChecks.ts`            | Assert visibility, enablement, and element state   |
+| `3.TableVerifications.ts`                        | Validate rows, columns, headers, pagination        |
+| `4.Label_Text_Placeholder_ValueVerifications.ts` | Check form labels, values, placeholders            |
+| `5.Button_Dialog_Interactions.ts`                | Handle modals, confirms, alerts, and buttons       |
+| `6.List_View_Assertions.ts`                      | Smart list view interactions                       |
+| `7.PageAndNavigation.ts`                         | Utilities for reloads, waits, and page control     |
+| `8.Table_Interaction_CellRetrieval.ts`           | Read and interact with specific cell values        |
+| `9.Multi-select_Dropdown.ts`                     | Select, deselect, and validate dropdowns           |
+| `10.Generic_Helpers.ts`                          | Scrolling, stabilization, retry helpers            |
+| `11.Input_TextHandling.ts`                       | Smart typing and clearing strategies               |
+| `12.Validation_Assertions.ts`                    | Required fields, error messages, form errors       |
+| `13.login.ts`                                    | Login workflows and protected area access          |
+| `14.Specialized_Modules_Scenarios.ts`            | ERP and enterprise-specific UI logic               |
 
 ---
 
-## ✅ What's Included?
-
-> 80+ ready-to-use Cypress custom commands, categorized into 14 robust files:
-
-| Category                     | File Path                                        | Description                                                      |
-| ---------------------------- | ------------------------------------------------ | ---------------------------------------------------------------- |
-| 🔍 Search & Filters          | `1.Search_Filter_Verifications.ts`               | Search field tests linked to table column values                 |
-| 👀 Visibility & State Checks | `2.Element_Visibility_StateChecks.ts`            | Presence, visibility, enable/disable, loading states             |
-| 📊 Table Validations         | `3.TableVerifications.ts`                        | Header, cell, row counts, sorting, and pagination assertions     |
-| 🏷️ Labels & Placeholders    | `4.Label_Text_Placeholder_ValueVerifications.ts` | Accurate label, placeholder, and input value verifications       |
-| 🔘 Buttons & Dialogs         | `5.Button_Dialog_Interactions.ts`                | Button clicks, dialog open/close, confirmation interactions      |
-| 📋 List View Assertions      | `6.List_View_Assertions.ts`                      | Validate list/grid items rendering and values                    |
-| 📄 Navigation & Reload       | `7.PageAndNavigation.ts`                         | Intelligent page reloads, stability waits, route checks          |
-| 📥 Table Interactions        | `8.Table_Interaction_CellRetrieval.ts`           | Extract or act on table cell values based on conditions          |
-| 🧾 Multi-select Dropdowns    | `9.Multi-select_Dropdown.ts`                     | PrimeNG dropdown, checkbox, and filter interaction               |
-| 🛠️ Generic Helpers          | `10.Generic_Helpers.ts`                          | Common reusable utilities (stability, scroll, wait, assert fail) |
-| ✏️ Input Handling            | `11.Input_TextHandling.ts`                       | Type, clear, append, and check values professionally             |
-| ⚠️ Validations               | `12.Validation_Assertions.ts`                    | Required field marks, error highlights, validation triggers      |
-| 🔐 Login Helpers             | `13.login.ts`                                    | Standard login workflow and session management                   |
-| ⚙️ Specialized Modules       | `14.Specialized_Modules_Scenarios.ts`            | ERP-specific modules and edge-case UI testing                    |
-
-> 🔁 Each file is modular and extensible for large teams and CI/CD flows.
-
----
-
-## 💡 How It Works
-
-Once installed via `npm run install:commands`, this package will:
-
-* 📁 Copy all command files into `cypress/support/angular-commands/`
-* 🧩 Append a `require/import` into your `support/index.ts` if it exists
-* 🛡️ **Never override your existing custom commands or files**
-* 🔄 Ready for use across multiple specs with full TypeScript support
-
----
-
-## 🔧 Setup Example
-
-Directory Structure:
-
-```
-cypress/
-└── support/
-    ├── angular-commands/
-    │   ├── 1.Search_Filter_Verifications.ts
-    │   ├── ...
-    ├── index.ts   ← Includes the imports for these commands
-```
-
----
-
-## 🧪 Sample Usage
+## 🧪 Example Usages
 
 ```ts
-// Test search field filters table correctly
-cy.verifySearchFunctionality('[data-test="search-input"]', [1, 2]);
+// Search a table by a value in multiple columns
+cy.verifySearchFunctionality('[data-test="search-box"]', [1, 2]);
 
-// Get a table cell value where another cell matches "Confirmed"
-cy.getCellValueWhenCondition(2, 0, 'Confirmed').then((val) => {
-  expect(val).to.contain('Invoice');
+// Conditionally get a cell value from a row
+cy.getCellValueWhenCondition(3, 0, "Confirmed").then((val) => {
+  expect(val).to.include("Invoice");
 });
 
-// Verify label and placeholder values
-cy.verifyLabelText('[data-test="email-label"]', 'Email Address');
-cy.verifyPlaceholder('[data-test="email-input"]', 'Enter your email');
+// Validate form elements
+cy.verifyLabelText('[data-test="email-label"]', "Email");
+cy.verifyPlaceholder('[data-test="email-input"]', "Enter your email");
+
+// Interact with PrimeNG-style dropdown
+cy.selectAllStatusExceptPostFilter("status-dropdown", 3);
 ```
 
 ---
 
-## 📚 Real-World Use Cases
+## 💼 Best Fit For:
 
-* 🔁 Angular-based ERP apps (Sales, HR, Inventory, Finance)
-* 🧾 Forms with PrimeNG dropdowns, checkboxes, validations
-* 📊 Table-driven dashboards with filters, search, sort, and pagination
-* 🔐 Protected workflows with login-based session handling
-* 🧼 Writing clean, DRY, and readable tests across modules
+- ERP systems (Sales, HR, Finance, Inventory, etc.)
+- Angular, React, Laravel Blade UI, or any table/form-heavy apps
+- Projects using PrimeNG, Material UI, or Bootstrap
 
 ---
 
-## ✅ Best Practices
+## 💡 Pro Tips & Best Practices
 
-* Use these commands along with fixtures, aliases, and intercepts
-* Keep your specs clean and lean — most test logic lives in these commands
-* Use TypeScript for type safety and IDE autocomplete
-* Assert with `should`, `expect`, and built-in stability checkers
-* Integrate in CI pipelines with ease
-
----
-
-## 🛡 Safe for Existing Projects
-
-This package:
-
-* ✅ Adds a **new subfolder** under `support/`
-* ✅ Appends `import './angular-commands/...';` to your `index.ts`
-* 🚫 **Does not overwrite** existing commands or test specs
-* ⚙️ Works with JS and TS-based Cypress projects
+- All commands use safe timeouts, retry logic, and stability checks.
+- Use alongside Cypress fixtures, aliases, and intercepts for max power.
+- Works in JavaScript and TypeScript Cypress setups.
+- Zero conflicts: placed under `support/enterprise-commands/` and won't override your custom files.
 
 ---
 
-## 🌐 SEO Keywords
+## 🌍 SEO Keywords (for discoverability)
 
-* Cypress Angular custom commands
-* Cypress PrimeNG dropdown and table testing
-* Cypress ERP automation
-* Cypress reusable UI testing helpers
-* Test automation for Angular apps
-* Cypress enterprise project automation
-* Custom Cypress commands for UI components
-
----
-
-## 🤝 Contribute
-
-Suggestions, bug fixes, or ideas welcome!
-
-* Fork this repo
-* Create your feature branch (`git checkout -b feature/new-helper`)
-* Commit your changes
-* Submit a pull request 🎉
-
-Or open an issue to request enhancements.
+- Cypress reusable custom commands
+- Cypress PrimeNG dropdown/table helpers
+- Cypress ERP test automation library
+- Angular UI Cypress commands
+- Cypress enterprise testing toolkit
+- Cypress component interaction helpers
 
 ---
 
-## 📃 License
+## 🤝 Contributing
 
-**Apache-2.0 License** – Use freely in personal or commercial projects.
+We welcome your ideas, fixes, and new commands!
+
+1. Fork the repo
+2. Add your features or fixes
+3. Submit a pull request with description
 
 ---
 
-## ✨ Author
+## 🛡 License
+
+Apache-2.0 — Free for commercial and personal use.
+
+---
+
+## 👨‍💻 Author
 
 **Mohamed Said**
-Automation Architect | QA Mentor | Cypress Specialist
-
-* [LinkedIn](https://www.linkedin.com/in/mohamedsaidibrahim/)
-* [GitHub](https://github.com/MohamedSci)
-* [Medium](https://medium.com/@mohamedsaidibrahim)
+QA Automation Architect | Cypress Mentor
+🔗 [LinkedIn](https://www.linkedin.com/in/mohamedsaidibrahim)
+🔗 [GitHub](https://github.com/MohamedSci)
+🔗 [Medium](https://medium.com/@mohamedsaidibrahim)
 
 ---
 
-**Make your Angular test automation clean, scalable, and powerful – with Cypress Angular Commands.**
+> ⭐ If this package helped you, give it a star and share with your team!
 
-### ⭐ Star it on NPM and GitHub if you find it useful!
+---
 
-```bash
-npm install cypress-angular-commands
-npm run install:commands
+**Test smarter. Automate faster. Scale confidently — with `cypress-enterprise-commands`.**
+
 ```
-
-
-## > 🧠 Now you're ready to write enterprise-grade Cypress tests – in minutes, not hours.
 
 ```
