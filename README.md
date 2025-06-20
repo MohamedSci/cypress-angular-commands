@@ -200,13 +200,15 @@ Automation Architect | QA Mentor | Cypress Specialist
 ---
 
 **Make your Angular test automation clean, scalable, and powerful – with Cypress Angular Commands.**
-⭐ Star it on NPM and GitHub if you find it useful!
+
+### ⭐ Star it on NPM and GitHub if you find it useful!
 
 ```bash
 npm install cypress-angular-commands
 npm run install:commands
 ```
 
-> 🧠 Now you're ready to write enterprise-grade Cypress tests – in minutes, not hours.
+
+## > 🧠 Now you're ready to write enterprise-grade Cypress tests – in minutes, not hours.
 
 ```
