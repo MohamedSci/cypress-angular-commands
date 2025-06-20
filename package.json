@@ -1,0 +1,25 @@
+{
+  "name": "cypress-angular-commands",
+  "version": "1.0.0",
+  "description": "Reusable Cypress custom commands for Angular-based web applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "postinstall": "node ./postinstall.js"
+  },
+  "keywords": [
+    "cypress",
+    "e2e",
+    "testing",
+    "angular",
+    "custom-commands"
+  ],
+  "author": "Mohamed Said Ibrahim",
+  "license": "Apache-2.0",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
