@@ -7,8 +7,9 @@
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["cypress", "node"] // ✅ this is critical
   },
   "include": ["src/**/*"],
-  "exclude": ["dist"]
+  "exclude": ["dist", "node_modules"]
 }

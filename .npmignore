@@ -1,50 +1,66 @@
-# Ignore TypeScript source files
+# Exclude source files
 src/
+**/*.ts
+!dist/
 
-# Ignore Cypress project structure not needed in NPM
+# Exclude Cypress test project files (if copied locally for testing)
 cypress/
-cypress.config.ts
 cypress.config.js
+cypress.config.ts
+cypress.config.*.ts
+cypress/e2e/
+cypress/support/
+CypressScreenshots/
+CypressVideos/
 
-# Ignore build outputs if not from dist/
-*.log
+# Exclude build/test artifacts
 node_modules/
 dist/test/
 coverage/
+*.log
+*.tmp
 tmp/
 temp/
 
-# Ignore test data and examples
-examples/
-demo/
+# Exclude test specs and mocks
 test/
 __tests__/
 specs/
 *.spec.ts
+*.spec.js
 *.cy.ts
+*.cy.js
 *.test.ts
+*.test.js
+mock/
+mocks/
 
-# Ignore dev tools
+# Exclude environment/config/editor/tooling files
 .vscode/
 .idea/
 .env*
-tsconfig.json
-tsconfig.build.json
-jest.config.js
+*.env
 *.swp
 *.swo
+*.bak
 
-# Ignore metadata
+# Exclude metadata
 .nyc_output/
-.eslint*
-.prettier*
+*.tgz
+*.zip
+
+# Exclude linting, formatting, and tooling configs
+.eslintrc
+.eslintrc.js
+.prettierrc
+.prettierrc.*
 .editorconfig
 
-# Ignore version control
+# Exclude version control
 .git/
 .gitignore
 
-# Ignore OS/system files
+# OS and system files
 .DS_Store
 Thumbs.db
 desktop.ini
