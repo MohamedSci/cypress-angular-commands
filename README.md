@@ -103,6 +103,14 @@ cy.verifyPlaceholder('[data-test="email-input"]', 'Enter your email');
 
 ---
 
+## 🛡️ Already using Cypress with your own commands?
+This package will automatically:
+- Add commands under `cypress/support/angular-commands/`
+- Append a safe import to your existing `cypress/support/index.ts`
+- **Does NOT overwrite your files or affect your specs**
+
+---
+
 ## 📈 SEO Keywords (for Google indexing)
 
 * Cypress custom commands for Angular
@@ -123,7 +131,7 @@ We welcome pull requests and suggestions! Fork the repo, add features, and send 
 
 ## 📃 License
 
-MIT License – Free to use in commercial or open-source projects.
+Apache-2.0 License – Free to use
 
 ---
 

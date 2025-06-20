@@ -1,9 +1,15 @@
 const fs = require("fs");
 const path = require("path");
 
-const targetRoot = path.join(process.cwd(), "cypress", "support");
-const targetCommands = path.join(targetRoot, "commands");
-const sourceRoot = path.join(__dirname, "src", "support");
+const projectRoot = process.cwd();
+const targetSupportDir = path.join(projectRoot, "cypress", "support");
+const targetAngularCommandsDir = path.join(
+  targetSupportDir,
+  "angular-commands"
+);
+const sourceCommandsDir = path.join(__dirname, "src", "support", "commands");
+const sourceIndexPath = path.join(__dirname, "src", "support", "index.ts");
+const targetIndexPath = path.join(targetAngularCommandsDir, "index.ts");
 
 function copyRecursiveSync(src, dest) {
   const exists = fs.existsSync(src);
@@ -22,15 +28,43 @@ function copyRecursiveSync(src, dest) {
   }
 }
 
+function appendImportToUserSupportIndex() {
+  const userIndexPath = path.join(targetSupportDir, "index.ts");
+  const importStatement = `import './angular-commands/index';`;
+
+  if (fs.existsSync(userIndexPath)) {
+    const content = fs.readFileSync(userIndexPath, "utf-8");
+
+    if (!content.includes(importStatement)) {
+      fs.appendFileSync(userIndexPath, `\n${importStatement}`);
+      console.log("✅ Appended import to existing cypress/support/index.ts");
+    } else {
+      console.log("ℹ️ Import already exists in index.ts, skipping.");
+    }
+  } else {
+    console.warn(
+      "⚠️ Could not find cypress/support/index.ts. Please manually import:\n" +
+        importStatement
+    );
+  }
+}
+
 console.log("📦 Installing Cypress Angular Commands...");
 
 try {
-  copyRecursiveSync(path.join(sourceRoot, "commands"), targetCommands);
-  fs.copyFileSync(
-    path.join(sourceRoot, "index.ts"),
-    path.join(targetRoot, "index.ts")
+  // Copy files
+  copyRecursiveSync(
+    sourceCommandsDir,
+    path.join(targetAngularCommandsDir, "commands")
   );
-  console.log("✅ Custom commands successfully added to your Cypress project.");
+  fs.copyFileSync(sourceIndexPath, targetIndexPath);
+
+  // Append import to user's index.ts
+  appendImportToUserSupportIndex();
+
+  console.log(
+    "✅ Commands successfully installed into cypress/support/angular-commands/"
+  );
 } catch (err) {
-  console.error("❌ Failed to copy custom commands:", err);
+  console.error("❌ Failed to install commands:", err.message);
 }
