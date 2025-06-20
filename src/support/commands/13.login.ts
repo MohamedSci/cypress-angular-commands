@@ -1,10 +1,6 @@
 declare namespace Cypress {
     interface Chainable<Subject> {
         logOut(): Chainable<any>;
-        // implementLogin(isInventory: boolean): Chainable<any>;
-        // login(): Chainable<any>;
-        // loginSession(): Chainable<any>;
-        // changeLanguage(isInventory: boolean): Chainable<any>;
         implementLogin(isInventory: boolean): Chainable<any>;
         changeLanguage(isInventory: boolean): Chainable<any>;
         login(): Chainable<any>;
