@@ -25,6 +25,7 @@ declare namespace Cypress {
     clickSkipButtonWhenVisible(): Chainable<any>;
   }
 }
+
 Cypress.Commands.add("selectNewCalenderDate", (dataTestId: string, index: number) => {
   Cypress.log({
     name: "selectLastDayFromCalendar",
@@ -303,7 +304,7 @@ Cypress.Commands.add("addCostCenter", (costCenter: string, row: number, col: num
     .type("100");
   // });
   cy.clickDialogSaveButton();
-   cy.ensurePageIsReady();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("confirmTheDialog", () => {

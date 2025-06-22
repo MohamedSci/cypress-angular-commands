@@ -38,7 +38,7 @@ Cypress.Commands.add("verifyListVIewHasItems", () => {
 });
 
 Cypress.Commands.add("getInitItemsCountInListView", () => {
-cy.ensurePageIsReady();
+    cy.ensurePageIsReady();
     cy.verifyListVIewHasItems();
     cy.increaseScreenItemsMaxCount(100);
     cy.goToLastPaginatorPage();

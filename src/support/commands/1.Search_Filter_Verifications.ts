@@ -68,51 +68,51 @@ Cypress.Commands.add("selectPostFilter", (statusSelector: string, postedIndex: n
   cy.ensurePageIsReady();
 });
 
-Cypress.Commands.add("getCellValueWhenCondition",(targetCol: number, conditionCol: number, conditionValue: string) => {
-    cy.ensurePageIsReady();
+Cypress.Commands.add("getCellValueWhenCondition", (targetCol: number, conditionCol: number, conditionValue: string) => {
+  cy.ensurePageIsReady();
 
-    // Validate input parameters
-    if (targetCol < 0 || conditionCol < 0 || !conditionValue) {
-      throw new Error("Invalid input for getCellValueWhenCondition.");
+  // Validate input parameters
+  if (targetCol < 0 || conditionCol < 0 || !conditionValue) {
+    throw new Error("Invalid input for getCellValueWhenCondition.");
+  }
+
+  cy.get("table").should("be.visible");
+
+  cy.get("table tbody tr:visible").then(($rows) => {
+    if (!$rows.length) {
+      throw new Error("No visible rows found in table.");
     }
 
-    cy.get("table").should("be.visible");
+    let valueFound = false;
 
-    cy.get("table tbody tr:visible").then(($rows) => {
-      if (!$rows.length) {
-        throw new Error("No visible rows found in table.");
+    cy.wrap($rows).each(($row, index, $rowList) => {
+      if (valueFound) return;
+
+      cy.wrap($row)
+        .find("td")
+        .eq(conditionCol)
+        .invoke("text")
+        .then((conditionText) => {
+          if (conditionText.trim().includes(conditionValue)) {
+            cy.wrap($row)
+              .find("td")
+              .eq(targetCol)
+              .invoke("text")
+              .then((targetText) => {
+                cy.log(`Matched Row: ${index}, Target Value: ${targetText.trim()}`);
+                cy.wrap(targetText.trim()).as("firstColumnText");
+                valueFound = true; // prevent further iteration
+              });
+          }
+        });
+    }).then(() => {
+      if (!valueFound) {
+        throw new Error(`No row found with "${conditionValue}" in column ${conditionCol}.`);
       }
-
-      let valueFound = false;
-
-      cy.wrap($rows).each(($row, index, $rowList) => {
-        if (valueFound) return;
-
-        cy.wrap($row)
-          .find("td")
-          .eq(conditionCol)
-          .invoke("text")
-          .then((conditionText) => {
-            if (conditionText.trim().includes(conditionValue)) {
-              cy.wrap($row)
-                .find("td")
-                .eq(targetCol)
-                .invoke("text")
-                .then((targetText) => {
-                  cy.log(`Matched Row: ${index}, Target Value: ${targetText.trim()}`);
-                  cy.wrap(targetText.trim()).as("firstColumnText");
-                  valueFound = true; // prevent further iteration
-                });
-            }
-          });
-      }).then(() => {
-        if (!valueFound) {
-          throw new Error(`No row found with "${conditionValue}" in column ${conditionCol}.`);
-        }
-      });
-
     });
-    cy.ensurePageIsReady();
-  }
+
+  });
+  cy.ensurePageIsReady();
+}
 );
 

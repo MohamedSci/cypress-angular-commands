@@ -8,7 +8,7 @@ declare namespace Cypress {
     reloadScreen(): Chainable<any>;
     goBack(): Chainable<any>;
     clickAddNew(): Chainable<any>;
-    erpModuleLanding(moduleExtension: string): Chainable<any>;
+    goToScreen(urlExtension: string): Chainable<any>;
     ensurePageIsReady(): Chainable<any>;
   }
 }
@@ -98,15 +98,15 @@ Cypress.Commands.add("ensurePageIsReady", () => {
 
 let loginRetryCount = 0;
 
-Cypress.Commands.add("erpModuleLanding", (moduleExtension: string) => {
-  const isInventory = moduleExtension.includes("inventory");
-  const fullUrl = `${Cypress.env("erpBaseUrl")}${moduleExtension}`;
+Cypress.Commands.add("goToScreen", (urlExtension: string) => {
+  const isInventory = urlExtension.includes("inventory");
+  const fullUrl = `${Cypress.env("erpBaseUrl")}${urlExtension}`;
 
   cy.url().then((currentUrl) => {
-    if (!currentUrl.includes(moduleExtension)) {
+    if (!currentUrl.includes(urlExtension)) {
       cy.visit(fullUrl, { failOnStatusCode: false });
     } else {
-      cy.log(`✅ Already on module: ${moduleExtension}`);
+      cy.log(`✅ Already on module: ${urlExtension}`);
     }
 
     cy.ensurePageIsReady();
@@ -115,7 +115,7 @@ Cypress.Commands.add("erpModuleLanding", (moduleExtension: string) => {
     cy.url().then((urlAfterVisit) => {
       const redirectedToLogin =
         urlAfterVisit.includes("login?returnUrl") ||
-        !urlAfterVisit.includes(moduleExtension);
+        !urlAfterVisit.includes(urlExtension);
 
       if (redirectedToLogin) {
         if (loginRetryCount >= 2) {
@@ -125,11 +125,11 @@ Cypress.Commands.add("erpModuleLanding", (moduleExtension: string) => {
         cy.log("🔁 Redirected to login. Retrying login...");
         loginRetryCount++;
         cy.implementLogin(isInventory);
-        cy.erpModuleLanding(moduleExtension);
+        cy.goToScreen(urlExtension);
         return;
       }
 
-      cy.url({ timeout: 45000 }).should("include", moduleExtension);
+      cy.url({ timeout: 45000 }).should("include", urlExtension);
 
       // Wait for spinners or loading overlays to disappear
       cy.get(".spinner-overlay", { timeout: 30000 }).should("not.exist");
