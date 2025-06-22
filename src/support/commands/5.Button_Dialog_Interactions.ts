@@ -70,24 +70,24 @@ Cypress.Commands.add("selectNewCalenderDate", (dataTestId: string, index: number
   // Step 4: Wait for the calendar to close
   cy.get(datePickerPanelSelector).should('not.exist');
 
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.logMsg(`Calendar interaction completed for '${dataTestId}'`);
 });
 
 
 Cypress.Commands.add("clickSkipButtonWhenVisible", () => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get("body").then(($body) => {
     if ($body.find(".skip-button").length > 0) {
       cy.get(".skip-button").first().scrollIntoView().click({ force: true });
     }
   });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("clickButton", (btnLabel: RegExp) => {
   cy.contains("button", btnLabel, { timeout: 30000 }).scrollIntoView().click({ force: true });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("verifyPopUp", (isSuccessProcess: boolean) => {
@@ -116,7 +116,7 @@ Cypress.Commands.add("clickAddNewLineInDialog", () => {
 });
 
 Cypress.Commands.add("clickViewActionButton", (position: string) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.verifyListVIewHasItems();
   cy.catchUnCaughtException();
   cy.increaseScreenItemsMaxCount(100);
@@ -126,11 +126,11 @@ Cypress.Commands.add("clickViewActionButton", (position: string) => {
   } else {
     cy.getByTestAttribute("table_button_view").last().click({ force: true });
   }
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("clickPostActionButton", (position: string) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.verifyListVIewHasItems();
   cy.catchUnCaughtException();
   cy.increaseScreenItemsMaxCount(100);
@@ -140,29 +140,29 @@ Cypress.Commands.add("clickPostActionButton", (position: string) => {
   } else {
     cy.getByTestAttribute("table_button_post").last().click({ force: true });
   }
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("clickDeleteActionButton", (position: string) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.verifyListVIewHasItems();
   cy.catchUnCaughtException();
   cy.increaseScreenItemsMaxCount(100);
   cy.zoomOut();
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   // Check for table existence
   if (position == "first") {
     cy.getByTestAttribute("table_button_delete").first().click({ force: true });
   } else {
     cy.getByTestAttribute("table_button_delete").last().click({ force: true });
   }
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.logMsg("Delete Action Button Clicked");
 });
 
 Cypress.Commands.add("clickDeleteActionIconButton", (position: string) => {
-  cy.ensureStability(); // Wait for network requests to complete
-  cy.ensureStability();       // Wait for the page to become stable
+  cy.ensurePageIsReady(); // Wait for network requests to complete
+  cy.ensurePageIsReady();       // Wait for the page to become stable
   cy.catchUnCaughtException(); // Assuming this is a custom command for handling exceptions
   cy.increaseScreenItemsMaxCount(100); // Ensure maximum items are displayed, making the element more likely to be on screen
   cy.zoomOut(); // Zoom out to ensure elements are not obscured or off-screen
@@ -187,12 +187,12 @@ Cypress.Commands.add("confirmDeletePopUp", (isDeleted: boolean, apiExtension: st
     .within(() => {
       cy.get("button.swal2-confirm").scrollIntoView().click({ force: true });
     });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.wait(`@delete`, { timeout: 20000 }).its('response.statusCode').should('eq', isDeleted ? 200 : 500);
 });
 
 Cypress.Commands.add("clickEditActionIconButton", (position: string) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   if (position == "first") {
     cy.get('img[src="assets/images/table/edit.svg"]', { timeout: 30000 })
       .first()
@@ -204,18 +204,18 @@ Cypress.Commands.add("clickEditActionIconButton", (position: string) => {
       .scrollIntoView()
       .click({ force: true });
   }
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("clickEditActionButton", (position: string) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.verifyListVIewHasItems();
   if (position == "first") {
     cy.getByTestAttribute("table_button_edit").first().scrollIntoView().click({ force: true });
   } else {
     cy.getByTestAttribute("table_button_edit").last().scrollIntoView().click({ force: true });
   }
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("verifyCancelButton", () => {
@@ -230,7 +230,7 @@ Cypress.Commands.add("clickDialogSaveButton", () => {
     .scrollIntoView()
     .click({ force: true });
   cy.logMsg("Dialog Save Button Clicked");
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("verifyDialogCancelButton", () => {
@@ -238,14 +238,14 @@ Cypress.Commands.add("verifyDialogCancelButton", () => {
     .scrollIntoView()
     .should("be.visible");
   cy.logMsg("Dialog Save Button Visible");
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("clickDialogCancelButton", () => {
   cy.get('div[role="dialog"]', { timeout: 30000 }).within(() => {
     cy.getByTestAttribute("cancel").last().scrollIntoView().click({ force: true });
   });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("verifyPostButton", () => {
@@ -289,7 +289,7 @@ Cypress.Commands.add("toggleInputSwitch", (selector: string, orderIndex: number,
 Cypress.Commands.add("addCostCenter", (costCenter: string, row: number, col: number) => {
   cy.clickCellInATable(row, col);
   cy.get("tbody tr", { timeout: 20000 }).eq(row).find("td").eq(col).find("img").scrollIntoView().click({ force: true });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.deleteAllRowsInTheCostCenterDialog();
   cy.clickAddNewLineInDialog();
   // cy.get('div[role="dialog"]').scrollIntoView().should("be.visible").within(() => {
@@ -303,18 +303,18 @@ Cypress.Commands.add("addCostCenter", (costCenter: string, row: number, col: num
     .type("100");
   // });
   cy.clickDialogSaveButton();
-   cy.ensureStability();
+   cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("confirmTheDialog", () => {
   cy.get('button.swal2-confirm', { timeout: 15000 }).scrollIntoView().click({ force: true });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get("body").click(0, 0); // Close any open dropdowns or dialogs
 });
 
 Cypress.Commands.add("cancelTheDialog", () => {
   cy.get('button.swal2-cancel', { timeout: 20000 }).scrollIntoView().click({ force: true });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get("body").click(0, 0); // Close any open dropdowns or dialogs
 });
 

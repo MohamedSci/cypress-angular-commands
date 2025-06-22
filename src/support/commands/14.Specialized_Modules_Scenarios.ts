@@ -65,7 +65,7 @@ Cypress.Commands.add("prepareBeforeVerifyJournalEntry", (
   transactionDateIndex: number,
   journalCodeIndex: number
 ) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.verifyListVIewHasItems();
   cy.contains("button", "Create").scrollIntoView().should("be.visible");
   cy.getCellText("first", journalCodeIndex).then((journalCode) => {

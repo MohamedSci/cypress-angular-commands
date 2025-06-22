@@ -10,27 +10,35 @@ declare namespace Cypress {
 
 Cypress.Commands.add("changeLanguage", (isInventory: boolean): Cypress.Chainable<any> => {
     cy.catchUnCaughtException();
-    cy.ensureStability();
+    cy.ensurePageIsReady();
 
     cy.get("body").then(($body) => {
         if ($body.find("#Email").length > 0) {
             cy.implementLogin(isInventory);
             cy.changeLanguage(isInventory); // Retry after login
         } else {
-            cy.log("changeLanguage Already Logged In");
+            cy.log("✅ Already Logged In");
         }
     });
 
-    cy.get("button.btn_profaile", { timeout: 20000 }).first().scrollIntoView().click({ force: true });
-    cy.get("button.lang_link", { timeout: 15000 }).first().scrollIntoView().click({ force: true });
-    return cy.ensureStability();
+    cy.get("button.btn_profaile", { timeout: 20000 })
+        .first()
+        .scrollIntoView()
+        .click({ force: true });
+
+    cy.get("button.lang_link", { timeout: 15000 })
+        .first()
+        .scrollIntoView()
+        .click({ force: true });
+
+    return cy.ensurePageIsReady();
 });
 
 
 Cypress.Commands.add("login", (): Cypress.Chainable<any> => {
     const baseUrl = Cypress.env("erpBaseUrl");
     cy.visit(`${baseUrl}/erp`, { failOnStatusCode: false });
-    cy.ensureStability();
+    cy.ensurePageIsReady();
     return cy.implementLogin(false);
 });
 
@@ -43,7 +51,7 @@ Cypress.Commands.add("loginSession", (): Cypress.Chainable<any> => {
 
 
 Cypress.Commands.add("implementLogin", (isInventory: boolean): Cypress.Chainable<any> => {
-    cy.ensureStability();
+    cy.ensurePageIsReady();
     const currentUserRegex = new RegExp(
         (isInventory ? "/inventory-apis/" : "/erp-apis/") + "CurrentUserInfo",
         "i"
@@ -71,23 +79,23 @@ Cypress.Commands.add("implementLogin", (isInventory: boolean): Cypress.Chainable
 
                 cy.get('button[type="submit"]').first().click({ force: true });
 
-                cy.ensureStability();
+                cy.ensurePageIsReady();
                 cy.wait("@getCurrentUser", { timeout: 20000 }).its("response.statusCode").should("eq", 200);
-                cy.ensureStability();
+                cy.ensurePageIsReady();
             }
         });
     });
 
-    return cy.ensureStability();
+    return cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("logOut", () => {
     cy.get("button.btn_profaile").first().scrollIntoView().then(($el) => {
         if ($el.is(":visible")) {
             cy.wrap($el).click({ force: true });
-            cy.ensureStability();
+            cy.ensurePageIsReady();
             cy.get('button[class="log_link"]').first().should("be.visible").click({ force: true });
-            cy.ensureStability();
+            cy.ensurePageIsReady();
         } else {
             cy.log("Element is not visible");
         }

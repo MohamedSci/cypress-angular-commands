@@ -82,7 +82,7 @@ Cypress.Commands.add("selectPrimeNGDropdownByIndex", (optionIndex: number | "fir
       cy.get(panelSelector).should("not.exist");
 
       // Optional: Wait for stability
-      cy.ensureStability();
+      cy.ensurePageIsReady();
 
       return cy.wrap(selectedText);
     });
@@ -146,7 +146,7 @@ Cypress.Commands.add("selectPrimeNGDropdownOption", (dataTestId: string, searchK
   cy.logMsg('Dropdown panel disappeared (selection complete)');
 
   // Step 5: Ensure stability
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.logMsg('Page stability confirmed after dropdown selection');
 });
 
@@ -185,7 +185,7 @@ Cypress.Commands.add("getElementDropDownList", (position: string, index: number)
 
 Cypress.Commands.add("closeDropDown", (attr: string) => {
   cy.getByTestAttribute(attr).find("timesicon svg").first().scrollIntoView().click({ force: true });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get("body").click(0, 0);
 
 });

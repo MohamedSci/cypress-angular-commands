@@ -14,7 +14,7 @@ Cypress.Commands.add("logMsg", (str: any) => {
 });
 
 Cypress.Commands.add("getAllItemsCount", (gridSelector: string, itemSelector: string) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get("body").then(($body) => {
     if ($body.find(gridSelector).is(":visible")) {
       cy.get(gridSelector).then((parent) => {

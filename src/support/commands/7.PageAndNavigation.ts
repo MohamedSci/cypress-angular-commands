@@ -5,22 +5,102 @@ declare namespace Cypress {
     switchingToERPModule(urlStr: string, keywordStr: string, majorIndex: number): Chainable<any>;
     switchBetweenTabs(index: number): Chainable<any>;
     zoomOut(): Chainable<any>;
-    isPageStable(): Chainable<any>;
-    waitForNetworkIdle(options?: { timeout?: number; log?: boolean; interval?: number }): Chainable<void>;
     reloadScreen(): Chainable<any>;
     goBack(): Chainable<any>;
     clickAddNew(): Chainable<any>;
-    ensureStability(): Chainable<any>;
     erpModuleLanding(moduleExtension: string): Chainable<any>;
+    ensurePageIsReady(): Chainable<any>;
   }
 }
+
+Cypress.Commands.add("ensurePageIsReady", () => {
+  const waitForNetworkIdle = (options: { timeout?: number; log?: boolean; interval?: number } = {}) => {
+    const { timeout = 10000, log = true, interval = 500 } = options;
+
+    if (log) {
+      Cypress.log({
+        name: 'waitForNetworkIdle',
+        message: `Waiting for network idle (timeout: ${timeout}ms)`,
+      });
+    }
+
+    return cy.window({ log: false }).then({ timeout: timeout + 1000 }, (win) => {
+      return new Cypress.Promise<void>((resolve, reject) => {
+        let timedOut = false;
+        const timeoutId = setTimeout(() => {
+          timedOut = true;
+          reject(new Error(`Network did not become idle within ${timeout}ms`));
+        }, timeout);
+
+        const checkRequests = () => {
+          const pendingRequests = (win as any)._networkState?.pendingRequests || 0;
+
+          if (log) cy.log(`⏳ Pending requests: ${pendingRequests}`);
+
+          if (pendingRequests === 0) {
+            clearTimeout(timeoutId);
+            resolve();
+          } else if (!timedOut) {
+            setTimeout(checkRequests, interval);
+          }
+        };
+
+        checkRequests();
+      });
+    });
+  };
+
+  const waitForDOMStability = () => {
+    cy.window().then((win) => {
+      return new Cypress.Promise<void>((resolve) => {
+        let lastChange = Date.now();
+
+        const observer = new MutationObserver(() => {
+          lastChange = Date.now();
+        });
+
+        observer.observe(win.document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          characterData: true,
+        });
+
+        const checkStability = () => {
+          if (Date.now() - lastChange > 1000) {
+            observer.disconnect();
+            resolve();
+          } else {
+            setTimeout(checkStability, 500);
+          }
+        };
+
+        checkStability();
+      });
+    });
+  };
+
+  const waitForUIComponents = () => {
+    cy.get("body", { timeout: 60000 }).should("be.visible");
+
+    cy.log("⏳ Waiting for loading indicators to disappear...");
+    cy.get(".spinner-overlay,.skeleton-loader", { timeout: 30000 }).should("not.exist");
+  };
+
+  // === Unified Execution Flow ===
+  cy.log("🔎 Ensuring page is ready (network + UI + DOM stability)");
+  waitForNetworkIdle();
+  waitForUIComponents();
+  waitForDOMStability();
+  cy.log("✅ Page is fully stable and ready.");
+});
+
 
 let loginRetryCount = 0;
 
 Cypress.Commands.add("erpModuleLanding", (moduleExtension: string) => {
   const isInventory = moduleExtension.includes("inventory");
   const fullUrl = `${Cypress.env("erpBaseUrl")}${moduleExtension}`;
-  const apiPath = isInventory ? "inventory-apis" : "erp-apis";
 
   cy.url().then((currentUrl) => {
     if (!currentUrl.includes(moduleExtension)) {
@@ -29,7 +109,7 @@ Cypress.Commands.add("erpModuleLanding", (moduleExtension: string) => {
       cy.log(`✅ Already on module: ${moduleExtension}`);
     }
 
-    cy.ensureStability();
+    cy.ensurePageIsReady();
     cy.catchUnCaughtException();
 
     cy.url().then((urlAfterVisit) => {
@@ -49,13 +129,12 @@ Cypress.Commands.add("erpModuleLanding", (moduleExtension: string) => {
         return;
       }
 
-      // Ensure we're on the correct URL
       cy.url({ timeout: 45000 }).should("include", moduleExtension);
 
-      // Ensure the page has finished loading
+      // Wait for spinners or loading overlays to disappear
       cy.get(".spinner-overlay", { timeout: 30000 }).should("not.exist");
 
-      // Confirm side menu or key element is visible
+      // Ensure the side menu or page component is visible
       cy.get("p.date", { timeout: 60000 })
         .filter(":visible")
         .first()
@@ -72,12 +151,11 @@ Cypress.Commands.add("erpModuleLanding", (moduleExtension: string) => {
           }
         });
 
-      cy.ensureStability();
-      loginRetryCount = 0; // Reset retry count after successful load
+      cy.ensurePageIsReady();
+      loginRetryCount = 0;
     });
   });
 });
-
 
 
 Cypress.Commands.add("navigateToTheLatestScreen", () => {
@@ -107,7 +185,7 @@ Cypress.Commands.add("navigateToTheLatestScreen", () => {
 });
 
 Cypress.Commands.add("navigateToJournalEntryViewScreen", () => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.switchingToERPModule(
     Cypress.env("erpBaseUrl") + "/accounting/transactions/journalentry",
     "transactions/" + "journalentry",
@@ -119,12 +197,12 @@ Cypress.Commands.add("switchingToERPModule", (urlStr: string, keywordStr: string
   cy.catchUnCaughtException();
   cy.viewport(1920, 1080);
   cy.visit(urlStr, { failOnStatusCode: false });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.url().then((currentUrl) => {
     if (!currentUrl.includes(keywordStr)) {
       // Click on the next elements, ensuring each is visible
       // Click the Side Slider
-      cy.ensureStability();
+      cy.ensurePageIsReady();
       cy.get('div[class="sidebar close"]')
         .find("div i:nth-child(1)")
         .should("be.visible");
@@ -146,7 +224,7 @@ Cypress.Commands.add("switchingToERPModule", (urlStr: string, keywordStr: string
         .last()
         .scrollIntoView()
         .click({ force: true }); // Clicks the element
-      cy.ensureStability();
+      cy.ensurePageIsReady();
     }
   });
 }
@@ -163,49 +241,10 @@ Cypress.Commands.add("zoomOut", () => {
   });
 });
 
-Cypress.Commands.add('waitForNetworkIdle', { prevSubject: false }, (options: { timeout?: number; log?: boolean; interval?: number } = {}) => {
-  const { timeout = 10000, log = true, interval = 500 } = options;
-
-  if (log) {
-    Cypress.log({
-      name: 'waitForNetworkIdle',
-      message: `Waiting for network idle (timeout: ${timeout}ms)`,
-    });
-  }
-
-  return cy.window({ log: false }).then({ timeout: timeout + 1000 }, (win) => {
-    return new Cypress.Promise<void>((resolve, reject) => {
-      let timedOut = false;
-      const timeoutId = setTimeout(() => {
-        timedOut = true;
-        reject(new Error(`Network did not become idle within ${timeout}ms`));
-      }, timeout);
-
-      const checkRequests = () => {
-        const pendingRequests = (win as any)._networkState?.pendingRequests || 0;
-
-        if (log) {
-          cy.log(`Pending requests: ${pendingRequests}`);
-        }
-
-        if (pendingRequests === 0) {
-          clearTimeout(timeoutId);
-          resolve();
-        } else if (!timedOut) {
-          setTimeout(checkRequests, interval);
-        }
-      };
-
-      checkRequests();
-    });
-  });
-}
-);
-
 Cypress.Commands.add("reloadScreen", () => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.reload();
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get(".spinner-overlay").should("not.exist", { timeout: 30000 });
 });
 
@@ -220,40 +259,13 @@ Cypress.Commands.add("goBack", () => {
       cy.logMsg("No 'Cancel' or 'Back' button found, proceeding to history back.");
     }
   });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("clickAddNew", () => {
   const addNewButtons = 'button:contains("Add"), button:contains("Create") ';
   cy.get(addNewButtons, { timeout: 45000 }).last().scrollIntoView().click({ force: true });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get(".spinner-overlay").should("not.exist", { timeout: 30000 });
   cy.contains("button", /save/i).should("be.visible");
 });
-
-Cypress.Commands.add("ensureStability", () => {
-  cy.waitForNetworkIdle();
-  cy.isPageStable();
-});
-
-Cypress.Commands.add("isPageStable", () => {
-  cy.window().then(() => isPageStable());
-  cy.logMsg("Stable");
-});
-
-function isPageStable() {
-  const mutationObserver = new MutationObserver(() => { });
-  return new Cypress.Promise((resolve) => {
-    const timeout = setTimeout(() => {
-      mutationObserver.disconnect();
-      resolve(true);
-    }, 1000); // Adjust for stability period
-
-    mutationObserver.observe(document.body, { childList: true, subtree: true });
-    setTimeout(() => {
-      mutationObserver.disconnect();
-      clearTimeout(timeout);
-      resolve(false);
-    }, 250); // Adjust to wait longer if needed
-  });
-}

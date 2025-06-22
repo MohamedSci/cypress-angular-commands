@@ -18,7 +18,7 @@ Cypress.Commands.add("goToLastPaginatorPage", () => {
                     cy.logMsg("List view is fully loaded, no pagination available.");
                 } else {
                     cy.get('button[aria-label="Last Page"]', { timeout: 20000 }).scrollIntoView().click({ force: true });
-                    cy.ensureStability();
+                    cy.ensurePageIsReady();
                     cy.get("tbody tr", { timeout: 10000 }).should("have.length.greaterThan", 0);
                 }
             });
@@ -38,19 +38,19 @@ Cypress.Commands.add("verifyListVIewHasItems", () => {
 });
 
 Cypress.Commands.add("getInitItemsCountInListView", () => {
-cy.ensureStability();
+cy.ensurePageIsReady();
     cy.verifyListVIewHasItems();
     cy.increaseScreenItemsMaxCount(100);
     cy.goToLastPaginatorPage();
     cy.getAllItemsCount("table", "tbody tr").then((initCount) => {
         cy.wrap(initCount).as("initCount");
     });
-    cy.ensureStability();
+    cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("assertNewItemAddedToListView", () => {
     cy.url().should("not.include", "view"), { timeout: 120000 };
-    cy.ensureStability();
+    cy.ensurePageIsReady();
     cy.increaseScreenItemsMaxCount(100);
     cy.goToLastPaginatorPage();
     cy.get("@initCount").then((initCount) => {
@@ -63,7 +63,7 @@ Cypress.Commands.add("assertNewItemAddedToListView", () => {
 
 Cypress.Commands.add("assertAfterItemEditedInListView", () => {
     cy.url().should("not.include", "view"), { timeout: 120000 };
-    cy.ensureStability();
+    cy.ensurePageIsReady();
     cy.increaseScreenItemsMaxCount(100);
     cy.goToLastPaginatorPage();
     cy.get("@initCount").then((initCount) => {
@@ -75,7 +75,7 @@ Cypress.Commands.add("assertAfterItemEditedInListView", () => {
 });
 
 Cypress.Commands.add("assertItemDeletedFromListView", () => {
-    cy.ensureStability();
+    cy.ensurePageIsReady();
     cy.increaseScreenItemsMaxCount(100);
     cy.goToLastPaginatorPage();
     cy.get("@initCount").then((initCount) => {

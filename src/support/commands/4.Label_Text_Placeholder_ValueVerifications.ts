@@ -159,7 +159,7 @@ Cypress.Commands.add("verifyElementValueMapping", (selctorList: string[], values
 );
 
 Cypress.Commands.add("verifyTableHeadersScreen", (headers: string[]) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get("table").should("be.visible");
   cy.get("thead th").should("have.length.greaterThan", 2);
   headers.forEach((expectedHeader, index) => {

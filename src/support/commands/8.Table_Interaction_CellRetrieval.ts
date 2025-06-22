@@ -10,9 +10,9 @@ declare namespace Cypress {
 }
 
 Cypress.Commands.add('exportListView', (apiExtension: string, type: string) => {
-  cy.ensureStability(); // Ensure the page is stable before starting the export
+  cy.ensurePageIsReady(); // Ensure the page is stable before starting the export
   const exportType = type.toLowerCase(); // "excel" or "pdf"
-  cy.ensureStability(); // Ensure the page is stable before starting the export
+  cy.ensurePageIsReady(); // Ensure the page is stable before starting the export
 
   // Only match the path and method (GET), ignore query params
   cy.intercept('GET', new RegExp(`${apiExtension}/Export`, 'i')).as(`export${exportType}`);

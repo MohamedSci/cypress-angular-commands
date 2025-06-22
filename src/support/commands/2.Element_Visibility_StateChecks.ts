@@ -42,7 +42,7 @@ Cypress.Commands.add("verifyDimmidItemDropDownList", (attr) => {
 });
 
 Cypress.Commands.add("verifyNotExistanceTheRequiredValidation", () => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get("span.errorMessage").should("not.exist");
 });
 
@@ -70,7 +70,7 @@ Cypress.Commands.add("isSwitchedOn", (index: number, isSwitchedOn: boolean) => {
 });
 
 Cypress.Commands.add("verifyAfterSavingBehavior", () => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get('body').then(($body) => {
     const cancelButtons = $body.find('button:contains("Cancel"), button:contains("Back") ');
     cy.wrap(cancelButtons.last()).should('exist').should('be.visible', { timeout: 20000 });

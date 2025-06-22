@@ -63,7 +63,7 @@ Cypress.Commands.add("verifyCellInTable", (equality: boolean, row: any | "first"
 );
 
 Cypress.Commands.add("verifyFirstRowHasPostedStatus", () => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.verifyListVIewHasItems();
   cy.get("tbody tr", { timeout: 45000 }).first()
     .scrollIntoView().find("td").last()
@@ -164,7 +164,7 @@ Cypress.Commands.add("verifyIntegratedTableLines", (tableIndicies: number[], tab
 );
 
 Cypress.Commands.add("increaseScreenItemsMaxCount", (count: number) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get("table", { timeout: 30000 }).should("be.visible");
   cy.get("body").then(($body) => {
     if ($body.find('span[aria-label="Rows per page"]').last().is(":visible")) {
@@ -187,7 +187,7 @@ Cypress.Commands.add("increaseScreenItemsMaxCount", (count: number) => {
       cy.zoomOut();
     }
   });
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("clickFirstGeneratedTranscationHyperLink",
@@ -203,7 +203,7 @@ Cypress.Commands.add("clickGeneratedTranscationHyperLinkinCellTable", (
   sideIndex: number,
   module_name: string
 ) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.get("tbody").then(($tbody1) => {
     cy.wrap($tbody1)
       .find("tr")
@@ -237,7 +237,7 @@ Cypress.Commands.add("clickGeneratedTranscationHyperLinkinCellTable", (
   });
   cy.clickViewActionButton("first");
   cy.get("table").should("be.visible");
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.verifyListVIewHasItems();
 }
 );
@@ -298,7 +298,7 @@ Cypress.Commands.add("addSalesItemLine",
   (lineIndex: number, quantity: number, discountPercentage: number) => {
     var lineQuantity = quantity + lineIndex;
     var lineDiscount = discountPercentage + lineIndex * 10;
-    cy.ensureStability();
+    cy.ensurePageIsReady();
     cy.clickCellInATable(lineIndex, 0); // Item column
     cy.selectPrimeNGDropdownByIndex(lineIndex, "itemId");
 

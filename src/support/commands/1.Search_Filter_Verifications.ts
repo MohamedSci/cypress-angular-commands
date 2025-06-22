@@ -8,7 +8,7 @@ declare namespace Cypress {
 }
 
 Cypress.Commands.add("verifySearchFunctionality", (searchSelector: string, columnIndices: number[]) => {
-  cy.ensureStability();
+  cy.ensurePageIsReady();
   cy.verifyListVIewHasItems();
   columnIndices.forEach((columnIndex: number) => {
     cy.get("tbody tr", { timeout: 45000 }).then(($rows) => {
@@ -20,7 +20,7 @@ Cypress.Commands.add("verifySearchFunctionality", (searchSelector: string, colum
               .scrollIntoView()
               .clear({ force: true })
               .type(lastCellValue, { force: true });
-            cy.ensureStability();
+            cy.ensurePageIsReady();
             cy.verifyCellInTable(true, 0, columnIndex, lastCellValue);
 
           }
@@ -56,7 +56,7 @@ Cypress.Commands.add("selectAllStatusExceptPostFilter", (statusSelector: string,
   cy.get("div.p-checkbox-box").eq(PostedIndex).scrollIntoView().click();
   cy.clickButton(/view/i);
   cy.get("body").click(0, 0); // Click outside to close the dropdown
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 }
 );
 
@@ -65,11 +65,11 @@ Cypress.Commands.add("selectPostFilter", (statusSelector: string, postedIndex: n
   cy.get("div.p-checkbox-box", { timeout: 30000 }).eq(postedIndex).scrollIntoView().click();
   cy.clickButton(/view/i);
   cy.get("body").click(0, 0); // Click outside to close the dropdown
-  cy.ensureStability();
+  cy.ensurePageIsReady();
 });
 
 Cypress.Commands.add("getCellValueWhenCondition",(targetCol: number, conditionCol: number, conditionValue: string) => {
-    cy.ensureStability();
+    cy.ensurePageIsReady();
 
     // Validate input parameters
     if (targetCol < 0 || conditionCol < 0 || !conditionValue) {
@@ -112,8 +112,7 @@ Cypress.Commands.add("getCellValueWhenCondition",(targetCol: number, conditionCo
       });
 
     });
-
-    cy.ensureStability();
+    cy.ensurePageIsReady();
   }
 );
 
